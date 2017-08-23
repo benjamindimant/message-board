@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import './App.css';
 import _ from 'lodash';
+import { connect } from 'react-redux';
+import { getPosts } from './actions/postActions';
+import { Field, reduxForm, reset } from 'redux-form';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      posts: {"afsdjfhahskldfa": {title: "Title", body: "Body"}}
-    }
+  componentWillMount() {
+    this.props.getPosts();
   }
 
   renderPosts() {
-    return _.map(this.state.posts, (post, key) => {
+    return _.map(this.props.posts, (post, key) => {
       return (
         <div key={key}>
           <h3>{post.title}</h3>
@@ -30,4 +30,13 @@ class App extends Component {
   }
 }
 
-export default App;
+let form = reduxForm({
+  form: 'NewPost'
+})(App);
+
+/* mapStateToProps */
+form = connect(state => ({
+  posts: state.posts
+}), { getPosts })(form);
+
+export default form;
