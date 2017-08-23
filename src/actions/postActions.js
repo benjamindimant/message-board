@@ -12,3 +12,7 @@ export function getPosts() {
     })
   };
 };
+
+export function savePost(values) {
+  return dispatch => database.push(values);
+}

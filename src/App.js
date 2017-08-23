@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { getPosts } from './actions/postActions';
+import { getPosts, savePost } from './actions/postActions';
 import { Field, reduxForm, reset } from 'redux-form';
 
 class App extends Component {
@@ -21,10 +21,40 @@ class App extends Component {
     });
   }
 
+  renderField(field) {
+    return (
+      <input type="text" {...field.input} placeholder={`Please enter a ${field.label}`}/>
+    )
+  }
+
+  onSubmit(values) {
+    this.props.savePost(values).then(this.props.dispatch(reset('NewPost')));
+  }
+
   render() {
+    const { handleSubmit } = this.props;
     return (
       <div>
-        {this.renderPosts()}
+        <div>
+          {this.renderPosts()}
+        </div>
+        <div>
+          <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+            <Field
+              name="title"
+              component={this.renderField}
+              label="Title"
+              class=""
+            />
+            <Field
+              name="body"
+              component={this.renderField}
+              label="Body"
+              class=""
+            />
+            <button type="submit">Post</button>
+          </form>
+        </div>
       </div>
     );
   }
@@ -37,6 +67,6 @@ let form = reduxForm({
 /* mapStateToProps */
 form = connect(state => ({
   posts: state.posts
-}), { getPosts })(form);
+}), { getPosts, savePost })(form);
 
 export default form;
