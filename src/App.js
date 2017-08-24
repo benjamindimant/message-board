@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { getPosts, savePost } from './actions/postActions';
+import { getPosts, savePost, deletePost } from './actions/postActions';
 import { Field, reduxForm, reset } from 'redux-form';
 
 class App extends Component {
@@ -13,9 +13,12 @@ class App extends Component {
   renderPosts() {
     return _.map(this.props.posts, (post, key) => {
       return (
-        <div key={key}>
-          <h3>{post.title}</h3>
-          <p>{post.body}</p>
+        <div key={key} className="card post">
+          <div className="card-block" style={{padding: "20px"}}>
+            <h3 className="card-title">{post.title}</h3>
+            <p className="card-text">{post.body}</p>
+            <button className="btn btn-danger" onClick={() => { this.props.deletePost(key)}}>Delete</button>
+          </div>
         </div>
       );
     });
@@ -23,7 +26,7 @@ class App extends Component {
 
   renderField(field) {
     return (
-      <input type="text" {...field.input} placeholder={`Please enter a ${field.label}`}/>
+      <input type="text" {...field.input} placeholder={`Please enter a ${field.label}`} className={field.class}/>
     )
   }
 
@@ -35,24 +38,24 @@ class App extends Component {
     const { handleSubmit } = this.props;
     return (
       <div>
-        <div>
+        <div className="container">
           {this.renderPosts()}
         </div>
-        <div>
+        <div className=" fixed-bottom">
           <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
             <Field
               name="title"
               component={this.renderField}
               label="Title"
-              class=""
+              class="footer-title"
             />
             <Field
               name="body"
               component={this.renderField}
               label="Body"
-              class=""
+              class="footer-body"
             />
-            <button type="submit">Post</button>
+            <button className="btn footer-button" type="submit">Post</button>
           </form>
         </div>
       </div>
@@ -67,6 +70,6 @@ let form = reduxForm({
 /* mapStateToProps */
 form = connect(state => ({
   posts: state.posts
-}), { getPosts, savePost })(form);
+}), { getPosts, savePost, deletePost })(form);
 
 export default form;
