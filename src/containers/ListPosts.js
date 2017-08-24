@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import './App.css';
+import '../styles/ListPosts.css';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { getPosts, savePost, deletePost } from './actions/postActions';
+import { getPosts, savePost, deletePost } from '../actions/postActions';
 import { Field, reduxForm, reset } from 'redux-form';
+import PostCard from "../components/PostCard";
 
-class App extends Component {
+class ListPosts extends Component {
   componentWillMount() {
     this.props.getPosts();
   }
@@ -13,13 +14,11 @@ class App extends Component {
   renderPosts() {
     return _.map(this.props.posts, (post, key) => {
       return (
-        <div key={key} className="card post">
-          <div className="card-block" style={{padding: "20px"}}>
-            <h3 className="card-title">{post.title}</h3>
-            <p className="card-text">{post.body}</p>
-            <button className="btn btn-danger" onClick={() => { this.props.deletePost(key)}}>Delete</button>
-          </div>
-        </div>
+        <PostCard key={key}>
+          <h3 className="card-title">{post.title}</h3>
+          <p className="card-text">{post.body}</p>
+          <button className="btn btn-danger" onClick={() => { this.props.deletePost(key) }}>Delete</button>
+        </PostCard>
       );
     });
   }
@@ -65,7 +64,7 @@ class App extends Component {
 
 let form = reduxForm({
   form: 'NewPost'
-})(App);
+})(ListPosts);
 
 /* mapStateToProps */
 form = connect(state => ({
