@@ -5,10 +5,21 @@ import { connect } from 'react-redux';
 import { getPosts, savePost, deletePost } from '../actions/postActions';
 import { Field, reduxForm, reset } from 'redux-form';
 import PostCard from "../components/PostCard";
+import {getUser, logout} from "../actions/userActions";
 
 class ListPosts extends Component {
   componentWillMount() {
     this.props.getPosts();
+    this.props.getUser();
+    if (this.props.user.loading === false && this.props.user.email === undefined) {
+      this.props.history.replace('/login');
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.user.loading === false && nextProps.user.email === undefined) {
+      this.props.history.replace('/login');
+    }
   }
 
   renderPosts() {
@@ -34,9 +45,12 @@ class ListPosts extends Component {
   }
 
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit, logout } = this.props;
     return (
       <div>
+        <div className="navbar">
+          <button className="btn btn-danger" onClick={() => { logout() }}>Logout</button>
+        </div>
         <div className="container">
           {this.renderPosts()}
         </div>
@@ -67,8 +81,9 @@ let form = reduxForm({
 })(ListPosts);
 
 /* mapStateToProps */
-form = connect(state => ({
-  posts: state.posts
-}), { getPosts, savePost, deletePost })(form);
+form = connect((state, ownProps) => ({
+  posts: state.posts,
+  user: state.user
+}), { getPosts, savePost, deletePost, getUser, logout })(form);
 
 export default form;
