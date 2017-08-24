@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import SimpleBox from "../components/SimpleBox";
-import InputField from '../components/InputField';
+import InputField from "../components/InputField";
 import FooterFormButton from "../components/FooterFormButton";
+import SimpleBox from "../components/SimpleBox";
 
-class Login extends Component {
+class CreateAccount extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      confirmPassword: ''
     }
   }
 
@@ -23,17 +24,20 @@ class Login extends Component {
                     type="password"
                     label="Password"
                     inputAction={(event) => this.setState({password: event.target.value})} />
-        <FooterFormButton submitLabel="Login" otherLabel="Create Account" goToLink="/createaccount" {...this.props} />
+        <InputField id="confirm-password"
+                    type="password"
+                    label="Confirm Password"
+                    inputAction={(event) => this.setState({confirmPassword: event.target.value})} />
+        <FooterFormButton submitLabel="Create Account" otherLabel="Go back" goToLink="/login" {...this.props} />
       </div>
     )
   }
 
   render() {
-    console.log(this.state);
     return (
-      <SimpleBox title="Sign in" body={this.renderBody()}/>
-    );
+      <SimpleBox title="Create Account" body={this.renderBody()} />
+    )
   }
 }
 
-export default Login;
+export default CreateAccount;
