@@ -1,14 +1,23 @@
 import { auth } from '../Firebase';
 
 export const GET_USER = 'GET_USER';
+export const USER_STATUS = 'USER_STATUS';
 
 export function getUser() {
   return dispatch => {
+    dispatch({
+      type: USER_STATUS,
+      payload: true
+    });
     auth.onAuthStateChanged(user => {
       dispatch({
         type: GET_USER,
         payload: user
-      })
+      });
+      dispatch({
+        type: USER_STATUS,
+        payload: false
+      });
     })
   }
 }

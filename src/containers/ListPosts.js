@@ -5,23 +5,9 @@ import { connect } from 'react-redux';
 import { getPosts, savePost, deletePost } from '../actions/postActions';
 import { Field, reduxForm, reset } from 'redux-form';
 import PostCard from "../components/PostCard";
-import {getUser, logout} from "../actions/userActions";
+import {logout} from "../actions/userActions";
 
 class ListPosts extends Component {
-  componentWillMount() {
-    this.props.getPosts();
-    this.props.getUser();
-    if (this.props.user.loading === false && this.props.user.email === undefined) {
-      this.props.history.replace('/login');
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.user.loading === false && nextProps.user.email === undefined) {
-      this.props.history.replace('/login');
-    }
-  }
-
   renderPosts() {
     return _.map(this.props.posts, (post, key) => {
       return (
@@ -54,7 +40,7 @@ class ListPosts extends Component {
         <div className="container">
           {this.renderPosts()}
         </div>
-        <div className=" fixed-bottom">
+        <div className="fixed-bottom">
           <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
             <Field
               name="title"
@@ -84,6 +70,6 @@ let form = reduxForm({
 form = connect((state, ownProps) => ({
   posts: state.posts,
   user: state.user
-}), { getPosts, savePost, deletePost, getUser, logout })(form);
+}), { getPosts, savePost, deletePost, logout })(form);
 
 export default form;
